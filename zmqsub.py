@@ -4,7 +4,7 @@ import json
 class NoMessagesException(Exception) :
 	pass
 
-class JSONZMQSub(object) :
+class JSONZMQConnectSub(object) :
 	def __init__(self, url) :
 		self.c = zmq.Context(1)
 		self.s = self.c.socket(zmq.SUB)
@@ -29,18 +29,29 @@ class JSONZMQSub(object) :
 
 		return self._last
 
-	def recv(self) :
+	def recv(self, timeout=0.0) :
 		msg = None
-		r, w, x = zmq.core.poll.select([self.s], [], [], 0.0)
+		r, w, x = zmq.core.poll.select([self.s], [], [], timeout)
 		if r :
 			msg = self.s.recv()
 			self._last = json.loads(msg)
 			return self._last
 		else :
 			raise NoMessagesException
-		
 
-class JSONZMQPub(object) :
+class JSONZMQConnectPub(object) :
+	def __init__(self, url) :
+		self.c = zmq.Context(1)
+		self.s = self.c.socket(zmq.PUB)
+		self.s.connect(url)
+
+	# unreliable send, but won't block forever.
+	def send(self, msg) :
+		r, w, x = zmq.core.poll.select([], [self.s], [], 10.0)
+		if w :
+			self.s.send(json.dumps(msg))
+
+class JSONZMQBindPub(object) :
 	def __init__(self, url) :
 		self.c = zmq.Context(1)
 		self.s = self.c.socket(zmq.PUB)
@@ -48,3 +59,20 @@ class JSONZMQPub(object) :
 
 	def send(self, msg) :
 		self.s.send(json.dumps(msg))
+
+class JSONZMQBindSub(object) :
+	def __init__(self, url) :
+		self.c = zmq.Context(1)
+		self.s = self.c.socket(zmq.SUB)
+		self.s.bind(url)
+		self.s.setsockopt (zmq.SUBSCRIBE, "")
+
+	def recv(self, timeout=0.0) :
+		msg = None
+		r, w, x = zmq.core.poll.select([self.s], [], [], timeout)
+		if r :
+			msg = self.s.recv()
+			self._last = json.loads(msg)
+			return self._last
+		else :
+			raise NoMessagesException
