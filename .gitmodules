@@ -1,0 +1,3 @@
+[submodule "python-irclib"]
+	path = python-irclib
+	url = git://github.com/eastein/python-irclib.git
