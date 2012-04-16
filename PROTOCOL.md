@@ -25,7 +25,7 @@ The Advise bus will be a ZeroMQ SUB socket, bound at the master.  The slaves wil
 <A name="toc3-24" title="slave-ready" />
 ### slave-ready
 
-No special args.  Should be sent every 5 seconds at least, to let the master know everyone is ready.
+No special args.  Should be sent every 5 seconds at least, to let the master know everyone is ready.  This means that the slave is ready to recieve commands, and has nothing to do with the user's willingness to play the file immediately, or any file presence.
 
 <A name="toc3-29" title="slave-exit" />
 ### slave-exit
