@@ -35,46 +35,45 @@ No special args.
 <A name="toc3-34" title="file-status" />
 ### file-status
 
-Args: `filename`, `md5`, `ts`
+Args: `filename`, `ts`
 
 * `filename`
 * `ts` shall be a gmt unix timestamp in seconds which is the greater of create time or modification time.
-* `md5` shall be a lowercase hex md5 hash of the file.
 
-<A name="toc3-43" title="simul-started" />
+<A name="toc3-42" title="simul-started" />
 ### simul-started
 
 Args: `filename`
 
 As soon as the file playback is begun, this should be sent.  This lets the master node keep track that the playback started properly.
 
-<A name="toc3-50" title="simul-notstarted" />
+<A name="toc3-49" title="simul-notstarted" />
 ### simul-notstarted
 
 Args: `filename`, `reason`
 
 The master sent a simul-file command and the slave couldn't.  A reason should be specified.  The reason shall be text.
 
-<A name="toc2-57" title="Command Bus" />
+<A name="toc2-56" title="Command Bus" />
 ## Command Bus
 
 The Command bus will be a ZeroMQ SUB socket bound on the master node.  Slaves will connect to it, and obey its commands.
 
-<A name="toc3-62" title="simul-file" />
+<A name="toc3-61" title="simul-file" />
 ### simul-file
 
 Args: `filename`
 
 When this message is recieved, the slave should start looking for the file specified, and drop any tasks that are currently operating, except for a running media play.  `file-status` messages should be sent periodically to report on such status.
 
-<A name="toc3-69" title="simul-start" />
+<A name="toc3-68" title="simul-start" />
 ### simul-start
 
 Args: `filename`
 
 When this message is recieved, the file should start playing immediately.  The slaves should all respond with either simul-started or simul-notstarted as soon as possible.
 
-<A name="toc3-76" title="simul-stop" />
+<A name="toc3-75" title="simul-stop" />
 ### simul-stop
 
 Args: `filename`

@@ -29,11 +29,10 @@ No special args.
 
 ### file-status
 
-Args: `filename`, `md5`, `ts`
+Args: `filename`, `ts`
 
 * `filename`
 * `ts` shall be a gmt unix timestamp in seconds which is the greater of create time or modification time.
-* `md5` shall be a lowercase hex md5 hash of the file.
 
 ### simul-started
 
