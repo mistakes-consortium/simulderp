@@ -25,7 +25,7 @@ No special args.  Should be sent every 5 seconds at least, to let the master kno
 
 ### slave_exit
 
-No special args.
+No special args. Optional.
 
 ### file_status
 

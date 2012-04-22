@@ -38,7 +38,7 @@ class Master(Simul) :
 
 	def handle_slave_ready(self, msg) :
 		self.slaves.setdefault(msg['src'], dict())
-		self.slaves[msg['src']].setdefault('seen_ts', time.time())
+		self.slaves[msg['src']]['seen_ts'] = time.time()
 
 	def handle_slave_exit(self, msg) :
 		try :
@@ -49,7 +49,7 @@ class Master(Simul) :
 	def step_end(self) :
 		slaves_dead = set()
 		for k in self.slaves.keys() :
-			if self.slaves[k]['seen_ts'] < time.time() - 30.0 :
+			if self.slaves[k]['seen_ts'] < time.time() - 10.0 :
 				slaves_dead.add(k)
 		for k in slaves_dead :
 			del self.slaves[k]
