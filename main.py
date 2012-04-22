@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 import irc
+import sys
 
 class SimulderpInterface(irc.IRCInterface):
     started = False
@@ -77,4 +79,13 @@ class SimulderpInterface(irc.IRCInterface):
                 self.ready_nicks.remove(nick)
             except: pass
 
-irc.start_reactor(SimulderpInterface, "irc.someserver.net", 6667, "#mc")
+try :
+    serv = sys.argv[1]
+    port = 6667
+    nick = sys.argv[2]
+    chan = sys.argv[3]
+except IndexError :
+    sys.stderr.write('usage: ./simulmaster.py <server> <nick> <channel>\n')
+    sys.exit(1)
+
+irc.start_reactor(SimulderpInterface, serv, 6667, nick, chan)

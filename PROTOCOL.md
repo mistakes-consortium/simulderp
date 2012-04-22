@@ -54,26 +54,33 @@ Args: `filename`, `reason`
 
 The master sent a simul-file command and the slave couldn't.  A reason should be specified.  The reason shall be text.
 
-<A name="toc2-56" title="Command Bus" />
+<A name="toc3-56" title="simul_playcompleted" />
+### simul_playcompleted
+
+Args: `filename`
+
+As soon as file playback is completed, this should be sent.  This lets the master node announce that the playback completed.  Optional.
+
+<A name="toc2-63" title="Command Bus" />
 ## Command Bus
 
 The Command bus will be a ZeroMQ SUB socket bound on the master node.  Slaves will connect to it, and obey its commands.
 
-<A name="toc3-61" title="simul_file" />
+<A name="toc3-68" title="simul_file" />
 ### simul_file
 
 Args: `filename`
 
 When this message is recieved, the slave should start looking for the file specified, and drop any tasks that are currently operating, except for a running media play.  `file-status` messages should be sent periodically to report on such status.
 
-<A name="toc3-68" title="simul_start" />
+<A name="toc3-75" title="simul_start" />
 ### simul_start
 
 Args: `filename`
 
 When this message is recieved, the file should start playing immediately.  The slaves should all respond with either simul-started or simul-notstarted as soon as possible.
 
-<A name="toc3-75" title="simul_stop" />
+<A name="toc3-82" title="simul_stop" />
 ### simul_stop
 
 Args: `filename`

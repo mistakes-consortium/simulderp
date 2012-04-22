@@ -46,6 +46,12 @@ Args: `filename`, `reason`
 
 The master sent a simul-file command and the slave couldn't.  A reason should be specified.  The reason shall be text.
 
+### simul_playcompleted
+
+Args: `filename`
+
+As soon as file playback is completed, this should be sent.  This lets the master node announce that the playback completed.  Optional.
+
 ## Command Bus
 
 The Command bus will be a ZeroMQ SUB socket bound on the master node.  Slaves will connect to it, and obey its commands.

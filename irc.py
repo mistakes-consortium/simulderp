@@ -2,8 +2,11 @@ from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol
 
 class IRCInterface(irc.IRCClient):
-    nickname = "[mc]simulderp"
     realname = "simulderp (c) 2012 mistakes consortium"
+
+    @property
+    def nickname(self) :
+        return self.factory.nick
 
     def signedOn(self):
         IRCInterface.instance = self
@@ -22,11 +25,12 @@ class IRCInterface(irc.IRCClient):
                 callback(nick, channel, args)
 
 class IRCInterfaceFactory(protocol.ReconnectingClientFactory):
-    def __init__(self, channel):
+    def __init__(self, nick, channel):
+        self.nick = nick
         self.channel = channel
 
-def start_reactor(protocol, host, port, channel):
-    factory = IRCInterfaceFactory(channel)
+def start_reactor(protocol, host, port, nick, channel):
+    factory = IRCInterfaceFactory(nick, channel)
     factory.protocol = protocol
     reactor.connectTCP(host, port, factory)
     reactor.run()
