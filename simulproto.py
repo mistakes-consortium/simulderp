@@ -1,10 +1,20 @@
+import threading
 import time
 import zmqsub
 
-class Simul(object) :
+class Simul(threading.Thread) :
 	def __init__(self, cmd_url, adv_url) :
 		self.cmd_url = cmd_url
 		self.adv_url = adv_url
+		self.ok = True
+		threading.Thread.__init__(self)
+
+	def run(self) :
+		while self.ok :
+			self.step()
+
+	def stop(self) :
+		self.ok = False
 
 	def step(self, max_io=1.0) :
 		now = time.time()
@@ -12,7 +22,6 @@ class Simul(object) :
 		while True :
 			try :
 				msg = self.ins.recv(timeout=max(0.0, deadline-now))
-				
 				mtype = msg['mtype']
 				handler = 'handle_%s' % mtype
 				if hasattr(self, handler) :

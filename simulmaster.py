@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import irc
 import sys
+import simulproto
 
 class SimulderpInterface(irc.IRCInterface):
     started = False
@@ -64,8 +65,11 @@ class SimulderpInterface(irc.IRCInterface):
                 self.say(channel, ', '.join(not_ready_nicks[:-1])+" and "+ not_ready_nicks[-1] +" are not ready yet :(")
             else:
                 self.say(channel, not_ready_nicks[0] + " is not ready yet :(")
+        elif self.in_nicks == [] :
+            self.say(channel, "Nobody is in.")
         else:
-            self.say(channel, "Unimplemented")
+            self.say(channel, "Everyone is ready!")
+        self.say_unicode(channel, "incidentally, %s are connected via simulslave." % ', '.join(self.factory.simulmaster.all_slaves))
 
     def COMMAND_BRB(self, nick, channel, args):
         if self.started != True:
@@ -84,8 +88,14 @@ try :
     port = 6667
     nick = sys.argv[2]
     chan = sys.argv[3]
+
+    cmd_url = sys.argv[4]
+    adv_url = sys.argv[5]
+
 except IndexError :
-    sys.stderr.write('usage: ./simulmaster.py <server> <nick> <channel>\n')
+    sys.stderr.write('usage: ./simulmaster.py <server> <nick> <channel> <cmd_url> <adv_url>\n')
     sys.exit(1)
 
-irc.start_reactor(SimulderpInterface, serv, 6667, nick, chan)
+simulmaster = simulproto.Master(cmd_url, adv_url)
+simulmaster.start()
+irc.start_reactor(SimulderpInterface, serv, 6667, nick, chan, simulmaster)

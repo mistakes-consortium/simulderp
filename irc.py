@@ -24,13 +24,17 @@ class IRCInterface(irc.IRCClient):
                 nick = user.split('!')[0]
                 callback(nick, channel, args)
 
+    def say_unicode(self, channel, msg) :
+        self.say(channel, msg.encode('ascii', 'ignore'))
+
 class IRCInterfaceFactory(protocol.ReconnectingClientFactory):
-    def __init__(self, nick, channel):
+    def __init__(self, nick, channel, simulmaster):
         self.nick = nick
         self.channel = channel
+	self.simulmaster = simulmaster
 
-def start_reactor(protocol, host, port, nick, channel):
-    factory = IRCInterfaceFactory(nick, channel)
+def start_reactor(protocol, host, port, nick, channel, simulmaster):
+    factory = IRCInterfaceFactory(nick, channel, simulmaster)
     factory.protocol = protocol
     reactor.connectTCP(host, port, factory)
     reactor.run()
